@@ -29,7 +29,7 @@ This toolkit implements the behavioral fingerprinting methodology proposed by **
 Install via `uv` or `pip`:
 
 ```bash
-git clone https://github.com/your-org/llm-fingerprint.git
+git clone https://github.com/mallochio/llm-fingerprint.git
 cd llm-fingerprint
 
 # Create virtual environment and install in editable mode

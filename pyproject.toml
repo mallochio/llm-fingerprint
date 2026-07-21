@@ -45,10 +45,10 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/cursor/plugins"
-Repository = "https://github.com/cursor/plugins"
-Documentation = "https://github.com/cursor/plugins/tree/main/cursor-team-kit/skills/thermo-nuclear-code-quality-review"
-"Bug Tracker" = "https://github.com/cursor/plugins/issues"
+Homepage = "https://github.com/mallochio/llm-fingerprint"
+Repository = "https://github.com/mallochio/llm-fingerprint"
+Documentation = "https://github.com/mallochio/llm-fingerprint#readme"
+"Bug Tracker" = "https://github.com/mallochio/llm-fingerprint/issues"
 
 [project.scripts]
 fingerprint = "fingerprint.cli:app"
