@@ -53,6 +53,70 @@ def zh_number(s: str) -> int | None:
     return tens * 10 + ones
 
 
+def _normalize_integer(s: str, lang: str, answer_space: str) -> NormalizationResult:
+    n = None
+    m = re.search(r"-?\d+", s)
+    if m:
+        n = int(m.group(0))
+    elif lang == "zh":
+        n = zh_number(s)
+
+    if n is None:
+        return NormalizationResult(normalized=None, answer_class="invalid")
+
+    range_match = re.search(r"(\d+)-(\d+)", answer_space)
+    if range_match:
+        low, high = int(range_match.group(1)), int(range_match.group(2))
+        in_range = low <= n <= high
+    else:
+        in_range = True
+
+    return NormalizationResult(
+        normalized=str(n),
+        answer_class="valid" if in_range else "invalid"
+    )
+
+
+def _normalize_binary(s: str, lang: str) -> NormalizationResult:
+    word = s.lower().split()[0]
+    mapped = COIN_MAP.get(lang, {}).get(word)
+    if mapped:
+        return NormalizationResult(normalized=mapped, answer_class="valid")
+    return NormalizationResult(normalized=None, answer_class="invalid")
+
+
+def _normalize_text(
+    s: str,
+    lang: str,
+    normalize_as: str,
+    category: str,
+    color_lexicon: dict[str, Any] | None,
+) -> NormalizationResult:
+    words = s.lower().split()
+    if normalize_as == "word" and len(words) > 3:
+        # Off-format sentence residue
+        return NormalizationResult(normalized=None, answer_class="invalid")
+
+    first_word = words[0] if words else ""
+    if not first_word:
+        return NormalizationResult(normalized=None, answer_class="empty")
+
+    if normalize_as == "grapheme":
+        if len(first_word) > 1 and lang != "zh":
+            single = next((w for w in words if len(w) == 1), None)
+            if not single:
+                return NormalizationResult(normalized=None, answer_class="invalid")
+            first_word = single
+
+    res = NormalizationResult(normalized=first_word, answer_class="valid")
+
+    if category == "color" and color_lexicon and res.normalized:
+        color_map = color_lexicon.get("map", {}).get(lang, {})
+        res.color_canon = color_map.get(res.normalized, None)
+
+    return res
+
+
 def normalize_answer(
     raw: str | None,
     lang: str = "en",
@@ -84,56 +148,9 @@ def normalize_answer(
     s = "".join(AR_DIGITS.get(c, c) for c in s)
 
     if normalize_as == "integer":
-        n = None
-        m = re.search(r"-?\d+", s)
-        if m:
-            n = int(m.group(0))
-        elif lang == "zh":
-            n = zh_number(s)
-
-        if n is None:
-            return NormalizationResult(normalized=None, answer_class="invalid")
-
-        range_match = re.search(r"(\d+)-(\d+)", answer_space)
-        if range_match:
-            low, high = int(range_match.group(1)), int(range_match.group(2))
-            in_range = low <= n <= high
-        else:
-            in_range = True
-
-        return NormalizationResult(
-            normalized=str(n),
-            answer_class="valid" if in_range else "invalid"
-        )
+        return _normalize_integer(s, lang, answer_space)
 
     if normalize_as == "binary":
-        word = s.lower().split()[0]
-        mapped = COIN_MAP.get(lang, {}).get(word)
-        if mapped:
-            return NormalizationResult(normalized=mapped, answer_class="valid")
-        return NormalizationResult(normalized=None, answer_class="invalid")
+        return _normalize_binary(s, lang)
 
-    words = s.lower().split()
-    if normalize_as == "word" and len(words) > 3:
-        # Off-format sentence residue
-        return NormalizationResult(normalized=None, answer_class="invalid")
-
-    first_word = words[0] if words else ""
-    if not first_word:
-        return NormalizationResult(normalized=None, answer_class="empty")
-
-    if normalize_as == "grapheme":
-        if len(first_word) > 1 and lang != "zh":
-            # Search for single character token in words
-            single = next((w for w in words if len(w) == 1), None)
-            if not single:
-                return NormalizationResult(normalized=None, answer_class="invalid")
-            first_word = single
-
-    res = NormalizationResult(normalized=first_word, answer_class="valid")
-
-    if category == "color" and color_lexicon and res.normalized:
-        color_map = color_lexicon.get("map", {}).get(lang, {})
-        res.color_canon = color_map.get(res.normalized, None)
-
-    return res
+    return _normalize_text(s, lang, normalize_as, category, color_lexicon)

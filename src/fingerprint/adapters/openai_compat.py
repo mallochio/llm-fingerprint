@@ -44,6 +44,23 @@ class OpenAICompatAdapter:
         if self.reasoning_effort is None and "gpt-5" in self.model:
             self.reasoning_effort = "minimal"
 
+        self._client: httpx.Client | None = None
+
+    def get_client(self) -> httpx.Client:
+        if self._client is None or self._client.is_closed:
+            self._client = httpx.Client(timeout=self.timeout_s)
+        return self._client
+
+    def close(self) -> None:
+        if self._client is not None and not self._client.is_closed:
+            self._client.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
+
     def complete(self, prompt: str, *, temperature: float = 1.0) -> AdapterResult:
         url = f"{self.base_url}/chat/completions"
         headers = {
@@ -67,8 +84,8 @@ class OpenAICompatAdapter:
 
         start_time = time.perf_counter()
         try:
-            with httpx.Client(timeout=self.timeout_s) as client:
-                response = client.post(url, headers=headers, json=payload)
+            client = self.get_client()
+            response = client.post(url, headers=headers, json=payload)
 
             elapsed_ms = (time.perf_counter() - start_time) * 1000.0
 

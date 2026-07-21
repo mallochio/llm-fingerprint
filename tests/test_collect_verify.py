@@ -44,3 +44,11 @@ def test_e2e_collect_verify_identify(tmp_path: Path):
     assert mix_res.num_sessions == 2
     assert "gpt-4o" in mix_res.estimated_mixture
     assert "claude-3-5-sonnet" in mix_res.estimated_mixture
+
+
+def test_parallel_collect():
+    battery_path = Path("batteries/v1")
+    ad = MockAdapter(target_profile="gpt-4o", seed=42)
+    fp = collect(ad, battery_path=battery_path, n_per_cell=5, max_workers=4)
+    assert len(fp.cells) > 0
+    assert sum(c.n_valid for c in fp.cells.values()) > 0

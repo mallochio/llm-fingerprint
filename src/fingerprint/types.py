@@ -4,16 +4,30 @@ from typing import TypedDict, Protocol, Any, Literal
 from pydantic import BaseModel, Field
 
 
-class AdapterResult(TypedDict):
+class AdapterResult(BaseModel):
     raw_text: str
-    extracted_token: str | None
+    extracted_token: str | None = None
     valid: bool
-    invalid_reason: str | None
+    invalid_reason: str | None = None
     latency_ms: float
-    exit_code: int | None
-    stdout: str
-    stderr: str
-    meta: dict[str, Any]
+    exit_code: int | None = None
+    stdout: str = ""
+    stderr: str = ""
+    meta: dict[str, Any] = Field(default_factory=dict)
+
+    def __getitem__(self, item: str) -> Any:
+        return getattr(self, item)
+
+    def get(self, item: str, default: Any = None) -> Any:
+        return getattr(self, item, default)
+
+
+class TaskSpec(BaseModel):
+    id: str
+    category: str = "word"
+    normalize_as: str = "word"
+    answer_space: str = ""
+    prompts: dict[str, str] = Field(default_factory=dict)
 
 
 class ModelAdapter(Protocol):

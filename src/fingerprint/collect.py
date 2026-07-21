@@ -2,6 +2,7 @@
 
 import json
 import hashlib
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable
@@ -38,7 +39,6 @@ def load_battery(battery_path: str | Path) -> tuple[dict[str, Any], str, str, di
     battery_id = battery_data.get("version", "v1")
     return battery_data, battery_id, battery_hash, color_lexicon
 
-
 def collect(
     adapter: ModelAdapter,
     battery_path: str | Path,
@@ -47,6 +47,7 @@ def collect(
     claimed_model: str | None = None,
     cache_dir: str | Path | None = None,
     progress_callback: Callable[[str, int, int], None] | None = None,
+    max_workers: int = 8,
 ) -> Fingerprint:
     """Collects empirical output distributions by probing the adapter across battery tasks."""
     battery_data, battery_id, battery_hash, color_lexicon = load_battery(battery_path)
@@ -57,9 +58,6 @@ def collect(
 
     # Cell storage
     cell_records: dict[str, CellData] = {}
-
-    total_probes = len(tasks) * len(languages) * n_per_cell
-    completed_probes = 0
 
     cache_file: Path | None = None
     cache_data: dict[str, Any] = {}
@@ -75,6 +73,8 @@ def collect(
             except Exception:
                 cache_data = {}
 
+    # Gather work items
+    work_items: list[tuple[str, int, dict[str, Any], str, str, str]] = []
     for task in tasks:
         task_id = task["id"]
         task_prompts = task.get("prompts", {})
@@ -86,56 +86,64 @@ def collect(
             prompt_text = task_prompts[lang]
             sys_prompt = system_prompts.get(lang, "")
             cell_key = f"{lang}/{task_id}"
+            full_prompt = f"{sys_prompt}\n\n{prompt_text}" if sys_prompt else prompt_text
 
-            if sys_prompt:
-                full_prompt = f"{sys_prompt}\n\n{prompt_text}"
-            else:
-                full_prompt = prompt_text
-
-            cell_data = cell_records.setdefault(cell_key, CellData())
+            cell_records.setdefault(cell_key, CellData())
 
             for rep in range(n_per_cell):
                 cache_key = f"{cell_key}_rep{rep}_temp{temperature}"
+                work_items.append((cell_key, rep, task, lang, full_prompt, cache_key))
 
-                if cache_key in cache_data:
-                    raw_text = cache_data[cache_key]["raw_text"]
-                else:
-                    adapter_res = adapter.complete(full_prompt, temperature=temperature)
-                    raw_text = adapter_res.get("raw_text", "")
-                    if cache_file:
-                        cache_data[cache_key] = {
-                            "raw_text": raw_text,
-                            "valid": adapter_res.get("valid", False),
-                            "latency_ms": adapter_res.get("latency_ms", 0.0),
-                        }
+    total_probes = len(work_items)
+    completed_probes = 0
 
-                # Normalize answer
-                norm_res = normalize_answer(
-                    raw_text,
-                    lang=lang,
-                    task=task,
-                    color_lexicon=color_lexicon,
-                )
+    def _process_item(item: tuple[str, int, dict[str, Any], str, str, str]) -> tuple[str, str, dict[str, Any], str, str]:
+        cell_key, rep, task, lang, full_prompt, cache_key = item
+        if cache_key in cache_data:
+            raw_text = cache_data[cache_key]["raw_text"]
+        else:
+            adapter_res = adapter.complete(full_prompt, temperature=temperature)
+            raw_text = getattr(adapter_res, "raw_text", "") if hasattr(adapter_res, "raw_text") else adapter_res.get("raw_text", "")
+            if cache_file:
+                cache_data[cache_key] = {
+                    "raw_text": raw_text,
+                    "valid": getattr(adapter_res, "valid", False) if hasattr(adapter_res, "valid") else adapter_res.get("valid", False),
+                    "latency_ms": getattr(adapter_res, "latency_ms", 0.0) if hasattr(adapter_res, "latency_ms") else adapter_res.get("latency_ms", 0.0),
+                }
+        return cell_key, raw_text, task, lang, cache_key
 
-                if norm_res.answer_class == "valid" and norm_res.normalized:
-                    token = norm_res.normalized
-                    # Use the language-independent canonical color code when
-                    # available so color distributions are comparable across
-                    # languages, as described in the paper.
-                    if task.get("category") == "color" and norm_res.color_canon:
-                        token = norm_res.color_canon
-                    cell_data.counts[token] = cell_data.counts.get(token, 0) + 1
-                    cell_data.n_valid += 1
-                elif norm_res.answer_class == "refusal":
-                    cell_data.n_refusal += 1
-                elif norm_res.answer_class == "empty":
-                    cell_data.n_empty += 1
-                else:
-                    cell_data.n_invalid += 1
+    # Execute probes using ThreadPoolExecutor for concurrent completion fetching
+    workers = min(max_workers, max(1, total_probes))
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        futures = [executor.submit(_process_item, item) for item in work_items]
+        for future in as_completed(futures):
+            cell_key, raw_text, task, lang, _ = future.result()
+            cell_data = cell_records[cell_key]
 
-                completed_probes += 1
-                if progress_callback:
-                    progress_callback(cell_key, completed_probes, total_probes)
+            # Normalize answer
+            norm_res = normalize_answer(
+                raw_text,
+                lang=lang,
+                task=task,
+                color_lexicon=color_lexicon,
+            )
+
+            if norm_res.answer_class == "valid" and norm_res.normalized:
+                token = norm_res.normalized
+                if task.get("category") == "color" and norm_res.color_canon:
+                    token = norm_res.color_canon
+                cell_data.counts[token] = cell_data.counts.get(token, 0) + 1
+                cell_data.n_valid += 1
+            elif norm_res.answer_class == "refusal":
+                cell_data.n_refusal += 1
+            elif norm_res.answer_class == "empty":
+                cell_data.n_empty += 1
+            else:
+                cell_data.n_invalid += 1
+
+            completed_probes += 1
+            if progress_callback:
+                progress_callback(cell_key, completed_probes, total_probes)
 
     if cache_file and cache_data:
         with open(cache_file, "w", encoding="utf-8") as f:
