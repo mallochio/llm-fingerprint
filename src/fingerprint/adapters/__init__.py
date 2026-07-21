@@ -1,6 +1,7 @@
 """Adapter registry and factory functions."""
 
 import os
+import shutil
 from typing import Any
 import yaml
 
@@ -13,7 +14,7 @@ from fingerprint.adapters.mock import MockAdapter
 BUILTIN_RECIPES = {
     "cursor_auto": {
         "type": "cli",
-        "command": ["cursor", "agent", "-p", "--trust", "--output-format", "text", "--mode", "ask"],
+        "command": ["agent", "-p", "--trust", "--output-format", "text", "--mode", "ask"],
         "prompt_mode": "argv",
         "prompt_template": (
             "Reply with exactly one word. No punctuation. No markdown. No preamble.\n"
@@ -59,6 +60,11 @@ def load_adapter(
     if not cfg:
         if adapter_id in BUILTIN_RECIPES:
             cfg = dict(BUILTIN_RECIPES[adapter_id])
+            if adapter_id == "cursor_auto" and "command" not in overrides:
+                if shutil.which("agent"):
+                    cfg["command"] = ["agent", "-p", "--trust", "--output-format", "text", "--mode", "ask"]
+                elif shutil.which("cursor"):
+                    cfg["command"] = ["cursor", "agent", "-p", "--trust", "--output-format", "text", "--mode", "ask"]
         elif adapter_id in ("openai", "openai-api"):
             cfg = {
                 "type": "openai",
