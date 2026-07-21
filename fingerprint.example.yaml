@@ -1,0 +1,38 @@
+# llm-fingerprint configuration example
+
+adapters:
+  cursor_auto:
+    type: cli
+    command: ["agent", "-p", "--output-format", "text", "--mode", "ask"]
+    prompt_mode: argv          # argv | stdin | file
+    prompt_template: |
+      Reply with exactly one word. No punctuation. No markdown. No preamble.
+      Do not use tools, shell, or read files. Do not explain.
+      Question: {prompt}
+    cwd: /tmp/fingerprint-empty
+    timeout_s: 120
+    environment: cursor-cli
+    env:
+      CURSOR_API_KEY: ${CURSOR_API_KEY}
+    extra_args: []
+
+  devin_auto:
+    type: cli
+    command: ["devin", "-p", "--"]
+    prompt_mode: argv
+    prompt_template: |
+      /ask Reply with exactly one word. No tools. No code. No preamble.
+      {prompt}
+    cwd: /tmp/fingerprint-empty
+    timeout_s: 180
+    environment: devin-cli
+    env:
+      DEVIN_API_KEY: ${DEVIN_API_KEY}
+
+  openrouter_gpt4o:
+    type: openai
+    environment: openai-api
+    model: openai/gpt-4o
+    base_url: https://openrouter.ai/api/v1
+    api_key: ${OPENROUTER_API_KEY}
+    timeout_s: 30
