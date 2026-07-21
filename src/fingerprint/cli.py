@@ -36,9 +36,20 @@ def probe_once(
     config: Optional[Path] = typer.Option(None, "--config", "-c", help="YAML config file path"),
     prompt: str = typer.Option("Name a random color.", "--prompt", "-p", help="Prompt string"),
     temperature: float = typer.Option(1.0, "--temperature", "-t", help="Sampling temperature"),
+    model: Optional[str] = typer.Option(None, "--model", help="Model ID"),
+    base_url: Optional[str] = typer.Option(None, "--base-url", help="OpenAI-compatible base URL"),
+    api_key: Optional[str] = typer.Option(None, "--api-key", help="API key"),
 ):
     """Probes an adapter once with a prompt and displays raw + normalized output."""
-    model_adapter = load_adapter(adapter, config_path=str(config) if config else None)
+    overrides = {}
+    if model:
+        overrides["model"] = model
+    if base_url:
+        overrides["base_url"] = base_url
+    if api_key:
+        overrides["api_key"] = api_key
+
+    model_adapter = load_adapter(adapter, config_path=str(config) if config else None, overrides=overrides)
     console.print(f"[bold blue]Probing adapter:[/bold blue] {model_adapter.name} (env: {model_adapter.environment})")
 
     res = model_adapter.complete(prompt, temperature=temperature)

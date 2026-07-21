@@ -1,0 +1,297 @@
+{
+  "schema_version": 1,
+  "battery_id": "1.0.0",
+  "battery_hash": "af264c8cb128",
+  "environment": "openai-api",
+  "adapter": "openai",
+  "claimed_model": "openai/gpt-4o-mini",
+  "temperature": 1.0,
+  "created_at": "2026-07-21T17:06:08.217060+00:00",
+  "cells": {
+    "en/num100-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "ru/num100-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "zh/num100-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "ar/num100-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "en/num10-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "ru/num10-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "zh/num10-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "ar/num10-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "en/num-favorite": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "ru/num-favorite": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "zh/num-favorite": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "ar/num-favorite": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "en/letter-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "ru/letter-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "zh/letter-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "ar/letter-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "en/word-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "ru/word-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "zh/word-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "ar/word-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "en/color-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "ru/color-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "zh/color-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "ar/color-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "en/color-favorite": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "ru/color-favorite": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "zh/color-favorite": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "ar/color-favorite": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "en/animal-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "ru/animal-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "zh/animal-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "ar/animal-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "en/city-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "ru/city-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "zh/city-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "ar/city-random": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "en/coin-flip": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "ru/coin-flip": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "zh/coin-flip": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    },
+    "ar/coin-flip": {
+      "counts": {},
+      "n_valid": 0,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 5
+    }
+  },
+  "meta": {
+    "n_per_cell": 5,
+    "total_probes": 200,
+    "completed_probes": 200
+  }
+}

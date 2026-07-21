@@ -47,7 +47,7 @@ class OpenAICompatAdapter:
             "model": self.model,
             "messages": messages,
             "temperature": temperature,
-            "max_tokens": 4,
+            "max_tokens": 32,
         }
 
         start_time = time.perf_counter()
