@@ -19,6 +19,8 @@ class OpenAICompatAdapter:
         api_key: str | None = None,
         environment: str = "openai-api",
         system_prompt: str | None = None,
+        max_completion_tokens: int | None = None,
+        reasoning_effort: str | None = None,
         timeout_s: float = 30.0,
     ):
         self.name = name
@@ -30,6 +32,17 @@ class OpenAICompatAdapter:
         self.environment = environment
         self.system_prompt = system_prompt
         self.timeout_s = timeout_s
+
+        # Reasoning-capable GPT-5 models need max_completion_tokens and a
+        # minimal reasoning-effort setting; o-series and older models keep the
+        # paper's 16-token cap.
+        self.max_completion_tokens = max_completion_tokens
+        if self.max_completion_tokens is None:
+            self.max_completion_tokens = 24 if "gpt-5" in self.model else 16
+
+        self.reasoning_effort = reasoning_effort
+        if self.reasoning_effort is None and "gpt-5" in self.model:
+            self.reasoning_effort = "minimal"
 
     def complete(self, prompt: str, *, temperature: float = 1.0) -> AdapterResult:
         url = f"{self.base_url}/chat/completions"
@@ -47,8 +60,10 @@ class OpenAICompatAdapter:
             "model": self.model,
             "messages": messages,
             "temperature": temperature,
-            "max_tokens": 32,
+            "max_completion_tokens": self.max_completion_tokens,
         }
+        if self.reasoning_effort is not None:
+            payload["reasoning_effort"] = self.reasoning_effort
 
         start_time = time.perf_counter()
         try:

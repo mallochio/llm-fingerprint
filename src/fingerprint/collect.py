@@ -119,6 +119,11 @@ def collect(
 
                 if norm_res.answer_class == "valid" and norm_res.normalized:
                     token = norm_res.normalized
+                    # Use the language-independent canonical color code when
+                    # available so color distributions are comparable across
+                    # languages, as described in the paper.
+                    if task.get("category") == "color" and norm_res.color_canon:
+                        token = norm_res.color_canon
                     cell_data.counts[token] = cell_data.counts.get(token, 0) + 1
                     cell_data.n_valid += 1
                 elif norm_res.answer_class == "refusal":
