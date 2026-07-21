@@ -13,7 +13,7 @@ from fingerprint.adapters.mock import MockAdapter
 BUILTIN_RECIPES = {
     "cursor_auto": {
         "type": "cli",
-        "command": ["agent", "-p", "--output-format", "text", "--mode", "ask"],
+        "command": ["cursor", "agent", "-p", "--trust", "--output-format", "text", "--mode", "ask"],
         "prompt_mode": "argv",
         "prompt_template": (
             "Reply with exactly one word. No punctuation. No markdown. No preamble.\n"
