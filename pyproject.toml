@@ -5,11 +5,34 @@ build-backend = "hatchling.build"
 [project]
 name = "llm-fingerprint"
 version = "0.1.0"
-description = "Toolkit to fingerprint and verify LLMs from single-token output distributions"
+description = "Single-token output distribution toolkit for fingerprinting, verifying, and auditing LLMs & router mixtures."
 readme = "README.md"
+license = "MIT"
 requires-python = ">=3.11"
+keywords = [
+    "llm",
+    "fingerprinting",
+    "ai-audit",
+    "model-verification",
+    "jensen-shannon-divergence",
+    "router-audit",
+    "evaluation",
+]
 authors = [
     { name = "LLM Fingerprint Team" }
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Security",
+    "Topic :: Software Development :: Testing",
 ]
 dependencies = [
     "typer>=0.12.0",
@@ -21,13 +44,25 @@ dependencies = [
     "pyyaml>=6.0",
 ]
 
+[project.urls]
+Homepage = "https://github.com/cursor/plugins"
+Repository = "https://github.com/cursor/plugins"
+Documentation = "https://github.com/cursor/plugins/tree/main/cursor-team-kit/skills/thermo-nuclear-code-quality-review"
+"Bug Tracker" = "https://github.com/cursor/plugins/issues"
+
 [project.scripts]
 fingerprint = "fingerprint.cli:app"
 
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0.0",
+    "pytest-cov>=4.1.0",
 ]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/fingerprint"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-ra --strict-markers"
