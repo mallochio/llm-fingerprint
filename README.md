@@ -26,9 +26,10 @@ Commercial API providers, proxy resellers, and AI coding agents often dynamicall
 When LLMs are asked simple, unconstrained questions (e.g., *"Name a random number between 1 and 100"* or *"Flip a coin"*), they reveal **intrinsic, statistically immutable behavioral signatures**. 
 
 For instance:
-- **GPT-5** exhibits a sharp preference for `7` and `42`.
-- **Claude 3.7 Sonnet** exhibits distinct peaks at `42` and `17`.
-- **Gemini 2.5 Pro** displays a characteristic peak at `37` and `73`.
+- **GPT-5.6 Sol** exhibits a sharp preference for `7` and `42`.
+- **Claude Fable 5** exhibits distinct peaks at `42` and `17`.
+- **Gemini 3.1 Pro** displays a characteristic peak at `37` and `73`.
+- **DeepSeek V4** exhibits a strong preference for `88` and `42`.
 
 By sampling just **1 output token per prompt** across a structured prompt battery and measuring base-2 **Jensen–Shannon Divergence ($D_{JS}$)**, `llm-fingerprint` uniquely identifies and verifies LLMs at near-zero latency and cost.
 
@@ -140,7 +141,7 @@ Generate reference fingerprints for target model APIs:
 
 ```bash
 export OPENAI_API_KEY=sk-...
-fingerprint ref build --adapter openai --model gpt-5 --out refs/api-v1
+fingerprint ref build --adapter openai --model gpt-5.6-sol --out refs/api-v1
 ```
 
 ### 3. Fast Quickcheck
@@ -172,8 +173,8 @@ from fingerprint.distance import distance
 from fingerprint.verify import verify, identify, mixture_report
 
 # 1. Initialize Adapters
-adapter_a = MockAdapter(target_profile="gpt-5")
-adapter_b = MockAdapter(target_profile="claude-3-7-sonnet")
+adapter_a = MockAdapter(target_profile="gpt-5.6-sol")
+adapter_b = MockAdapter(target_profile="claude-fable-5")
 
 # 2. Collect Empirical Fingerprints concurrently
 fp_a = collect(adapter_a, battery_path="batteries/v1", n_per_cell=20, max_workers=8)
@@ -181,7 +182,7 @@ fp_b = collect(adapter_b, battery_path="batteries/v1", n_per_cell=20, max_worker
 
 # 3. Compute Jensen-Shannon Divergence
 dist_result = distance(fp_a, fp_b, min_n=10)
-print(f"JSD Distance between GPT-5 and Claude 3.7 Sonnet: {dist_result.distance:.4f}")
+print(f"JSD Distance between GPT-5.6 Sol and Claude Fable 5: {dist_result.distance:.4f}")
 
 # 4. Verify Model Claim
 verify_result = verify(fp_a, fp_b, tau=0.05)

@@ -14,7 +14,7 @@ class OpenAICompatAdapter:
     def __init__(
         self,
         name: str = "openai",
-        model: str = "gpt-5",
+        model: str = "gpt-5.6-sol",
         base_url: str | None = None,
         api_key: str | None = None,
         environment: str = "openai-api",

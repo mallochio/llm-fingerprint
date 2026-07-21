@@ -93,7 +93,7 @@ def ref_build(
                     models_to_build.append(line)
 
     if not models_to_build:
-        models_to_build = ["gpt-5", "claude-3-7-sonnet"]
+        models_to_build = ["gpt-5.6-sol", "claude-fable-5", "gemini-3.1-pro", "deepseek-v4"]
         console.print("[yellow]No models specified, defaulting to mock reference build for demo models.[/yellow]")
 
     out.mkdir(parents=True, exist_ok=True)

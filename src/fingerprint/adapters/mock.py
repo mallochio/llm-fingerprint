@@ -10,7 +10,7 @@ class MockAdapter:
     """Mock adapter producing realistic synthetic outputs based on model profile seed."""
 
     PROFILES = {
-        "gpt-5": {
+        "gpt-5.6-sol": {
             "num100-random": ["7", "42", "73", "37", "88", "13", "55"],
             "num10-random": ["7", "3", "7", "5", "8", "7", "2"],
             "num-favorite": ["7", "7", "42", "7"],
@@ -22,7 +22,7 @@ class MockAdapter:
             "city-random": ["Paris", "Tokyo", "London", "New York", "Berlin"],
             "coin-flip": ["heads", "heads", "tails", "heads", "tails"],
         },
-        "claude-3-7-sonnet": {
+        "claude-fable-5": {
             "num100-random": ["42", "17", "84", "23", "99", "42", "7"],
             "num10-random": ["4", "7", "3", "9", "4", "6", "8"],
             "num-favorite": ["42", "42", "17", "42"],
@@ -34,7 +34,7 @@ class MockAdapter:
             "city-random": ["Kyoto", "Vienna", "Prague", "Sydney", "Cairo"],
             "coin-flip": ["tails", "heads", "tails", "tails", "heads"],
         },
-        "gemini-2.5-pro": {
+        "gemini-3.1-pro": {
             "num100-random": ["37", "73", "42", "19", "88", "7"],
             "num10-random": ["3", "7", "8", "5", "9", "2"],
             "num-favorite": ["37", "37", "73", "37"],
@@ -45,6 +45,30 @@ class MockAdapter:
             "animal-random": ["panther", "eagle", "cheetah", "orca", "falcon"],
             "city-random": ["Tokyo", "Zurich", "Singapore", "Toronto", "Seoul"],
             "coin-flip": ["heads", "tails", "heads", "heads", "tails"],
+        },
+        "deepseek-v4": {
+            "num100-random": ["88", "42", "13", "77", "99", "7"],
+            "num10-random": ["8", "3", "7", "2", "9", "5"],
+            "num-favorite": ["88", "42", "88", "7"],
+            "letter-random": ["D", "S", "V", "K", "X"],
+            "word-random": ["efficiency", "matrix", "vector", "nexus", "pulse"],
+            "color-random": ["crimson", "azure", "teal", "silver", "obsidian"],
+            "color-favorite": ["azure", "crimson", "teal", "silver"],
+            "animal-random": ["dragon", "panther", "phoenix", "falcon", "tiger"],
+            "city-random": ["Beijing", "Shanghai", "Shenzhen", "Hangzhou", "Tokyo"],
+            "coin-flip": ["heads", "heads", "tails", "tails", "heads"],
+        },
+        "qwen-3.7-max": {
+            "num100-random": ["66", "28", "88", "99", "7", "42"],
+            "num10-random": ["6", "8", "3", "7", "9", "1"],
+            "num-favorite": ["88", "66", "88", "42"],
+            "letter-random": ["Q", "W", "E", "N", "X"],
+            "word-random": ["pinnacle", "zenith", "cascade", "beacon", "apex"],
+            "color-random": ["gold", "crimson", "jade", "azure", "violet"],
+            "color-favorite": ["jade", "gold", "crimson", "azure"],
+            "animal-random": ["crane", "tiger", "dragon", "leopard", "falcon"],
+            "city-random": ["Hangzhou", "Beijing", "Hong Kong", "Singapore", "London"],
+            "coin-flip": ["tails", "heads", "heads", "tails", "heads"],
         },
         "gpt-4o": {
             "num100-random": ["7", "42", "73", "37", "88", "13", "55"],
@@ -83,7 +107,7 @@ class MockAdapter:
     def __init__(
         self,
         name: str = "mock",
-        target_profile: str = "gpt-5",
+        target_profile: str = "gpt-5.6-sol",
         environment: str = "mock-cli",
         failure_rate: float = 0.0,
         seed: int = 42,

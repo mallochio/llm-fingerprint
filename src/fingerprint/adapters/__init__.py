@@ -63,16 +63,20 @@ def load_adapter(
             cfg = {
                 "type": "openai",
                 "environment": "openai-api",
-                "model": overrides.get("model", "gpt-5"),
+                "model": overrides.get("model", "gpt-5.6-sol"),
                 "base_url": overrides.get("base_url"),
                 "api_key": overrides.get("api_key"),
             }
         elif adapter_id.startswith("mock"):
-            profile = "gpt-5"
+            profile = "gpt-5.6-sol"
             if "claude" in adapter_id:
-                profile = "claude-3-7-sonnet"
+                profile = "claude-fable-5"
             elif "gemini" in adapter_id:
-                profile = "gemini-2.5-pro"
+                profile = "gemini-3.1-pro"
+            elif "deepseek" in adapter_id:
+                profile = "deepseek-v4"
+            elif "qwen" in adapter_id:
+                profile = "qwen-3.7-max"
             elif "devin" in adapter_id or "router" in adapter_id:
                 profile = "devin-auto-mock"
             cfg = {

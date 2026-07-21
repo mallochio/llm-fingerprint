@@ -32,7 +32,7 @@ adapters:
   openrouter_gpt5:
     type: openai
     environment: openai-api
-    model: openai/gpt-5
+    model: openai/gpt-5.6-sol
     base_url: https://openrouter.ai/api/v1
     api_key: ${OPENROUTER_API_KEY}
     timeout_s: 30
