@@ -1,144 +1,252 @@
-# LLM Single-Token Fingerprinting Toolkit (`llm-fingerprint`)
+# 🔬 LLM Single-Token Fingerprinting Toolkit (`llm-fingerprint`)
 
 [![Python 3.11 | 3.12 | 3.13 | 3.14](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13%20%7C%203.14-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![arXiv](https://img.shields.io/badge/arXiv-2607.10252-b31b1b.svg)](https://arxiv.org/abs/2607.10252)
+[![Zenodo Software](https://img.shields.io/badge/Zenodo-10.5281%2Fzenodo.21278793-blue)](https://doi.org/10.5281/zenodo.21278793)
+[![Zenodo Dataset](https://img.shields.io/badge/Zenodo-10.5281%2Fzenodo.21278557-green)](https://doi.org/10.5281/zenodo.21278557)
 [![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-`llm-fingerprint` is an open-source toolkit that **fingerprints, verifies, and audits Large Language Models (LLMs)** from single-token output distributions across black-box HTTP APIs and headless agent CLIs (e.g., Cursor, Devin).
+> **Detect silent model downgrades, identify opaque API endpoints, and audit agent router mixtures using single-token output distributions.**
+
+`llm-fingerprint` is a high-performance Python toolkit and CLI designed to fingerprint, verify, and audit Large Language Models (LLMs) across black-box HTTP APIs and headless agent CLIs (such as Cursor, Devin, Aider, and custom subagents).
 
 ---
 
-## 1. Mission & Scientific Basis
+## 🎯 Why Single-Token Fingerprinting?
 
-This toolkit implements the behavioral fingerprinting methodology proposed by **Tomáš Bruckner** in:
-> **One Token Is Enough: Fingerprinting and Verifying Large Language Models from Single-Token Output Distributions** (arXiv:2607.10252, Jul 2026).
-> - **Software Artifact**: [Zenodo DOI: 10.5281/zenodo.21278793](https://doi.org/10.5281/zenodo.21278793)
-> - **Dataset Artifact**: [Zenodo DOI: 10.5281/zenodo.21278557](https://doi.org/10.5281/zenodo.21278557)
+### The Problem
+Commercial API providers, proxy resellers, and AI coding agents often dynamically route requests or silently downgrade underlying models to cut inference costs. Traditional LLM benchmarks (e.g. MMLU, HumanEval) are **slow, expensive** (costing thousands of output tokens), prone to prompt contamination, and easily spoofed by wrappers.
 
-### Core Capabilities
-1. **Verify**: Prove whether an API endpoint or provider is serving the exact model it claims by computing base-2 Jensen–Shannon Divergence ($D_{JS}(E, X) < \tau$).
-2. **Identify**: Find the top-$k$ nearest reference model families for unlabelled or opaque backends.
-3. **Audit Routers & Auto Modes**: Benchmark "Auto" routing modes (e.g. Cursor Auto, Devin Auto) as **mixtures over sessions**, measuring session-to-session distribution variance and model proportions.
-4. **Concurrent High-Throughput Probing**: Parallelized thread-pool collection with persistent HTTP client connection reuse for fast execution.
-5. **Universal Adapters**: Out-of-the-box support for OpenAI-compatible HTTP endpoints, generic CLI subprocesses, and offline synthetic test mocks.
+### The Scientific Solution
+When LLMs are asked simple, unconstrained questions (e.g., *"Name a random number between 1 and 100"* or *"Flip a coin"*), they reveal **intrinsic, statistically immutable behavioral signatures**. 
+
+For instance:
+- **GPT-4o** exhibits a sharp preference for `7` and `42`.
+- **Claude 3.5 Sonnet** exhibits distinct peaks at `42` and `17`.
+- **Gemini Flash** displays a different characteristic empirical distribution altogether.
+
+By sampling just **1 output token per prompt** across a structured prompt battery and measuring base-2 **Jensen–Shannon Divergence ($D_{JS}$)**, `llm-fingerprint` uniquely identifies and verifies LLMs at near-zero latency and cost.
 
 ---
 
-## 2. Installation
+## 🚀 Key Features
 
-Install via `uv` or `pip`:
+- 🛡️ **Model Swapping Verification**: Prove mathematically whether an API endpoint or reseller is serving the exact model claimed ($D_{JS} < \tau$).
+- 🔀 **Router & Auto Mode Auditing**: Estimate model mixture proportions in dynamic "Auto" router modes (e.g. Cursor Auto, Devin Auto) over multi-session samples.
+- 🕵️ **Opaque Model Identification**: Perform nearest-neighbor ($k$-NN) matching to classify unlabelled API endpoints against golden reference fingerprints.
+- ⚡ **Concurrent High-Throughput Engine**: Parallelized sampling (`ThreadPoolExecutor`) with persistent connection pool reuse (`httpx.Client`).
+- 🔌 **Universal Adapter Support**: Plug-and-play support for OpenAI-compatible HTTP APIs, generic headless CLI subprocesses, and offline synthetic test mocks.
+- 🌐 **Multilingual Canonicalization**: Pre-built normalizers handling Unicode NFC normalization, Arabic-Indic digits, Chinese numerals (一-九十九), binary coin mappings, and canonical color lexicons.
+
+---
+
+## 📊 System Architecture & Pipeline Flow
+
+```text
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                             PROMPT BATTERY (v1)                             │
+│     Tasks: [num100-random, num10-random, color-random, coin-flip, ...]     │
+│     Languages: [English (en), Russian (ru), Chinese (zh), Arabic (ar)]      │
+└──────────────────────┬──────────────────────────────────────────────────────┘
+                       │
+                       ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      CONCURRENT PROBE ENGINE (Collector)                    │
+│     - ThreadPoolExecutor parallel dispatch                                  │
+│     - Persistent HTTP connection pooling / Subprocess executor              │
+│     - Resume cache (cache_*.json)                                           │
+└──────────────────────┬──────────────────────────────────────────────────────┘
+                       │
+                       ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         CANONICAL NORMALIZER SYSTEM                         │
+│     - Text cleaning (NFC, casefold, punctuation removal)                    │
+│     - Digit translation (Arabic-Indic ٧ -> 7, Chinese 四十二 -> 42)           │
+│     - Validity Taxonomy: [valid, invalid, refusal, empty]                 │
+│     - Cross-lingual Color Lexicon mapping                                   │
+└──────────────────────┬──────────────────────────────────────────────────────┘
+                       │
+                       ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      JENSEN-SHANNON DIVERGENCE (JSD)                        │
+│     - Calculates bounded JSD metric: D_JS(P, Q) in [0, 1]                   │
+│     - Minimum valid sample threshold filtering (n_valid >= min_n)           │
+└──────────────────────┬──────────────────────────────────────────────────────┘
+                       │
+                       ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       EVALUATION & REPORT GENERATION                        │
+│     - Verdict: PASSED / FAILED verification against claim                   │
+│     - Nearest-Neighbor (k-NN) Reference Library match                       │
+│     - Router Mixture Share Estimation (%)                                   │
+│     - Markdown & HTML Audit Reports                                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 💻 Installation
+
+Install via `uv` (recommended) or `pip`:
 
 ```bash
+# Clone repository
 git clone https://github.com/mallochio/llm-fingerprint.git
 cd llm-fingerprint
 
-# Create virtual environment and install in editable mode
+# Create virtual environment and install in editable mode with dev dependencies
 uv venv .venv
 source .venv/bin/activate
 uv pip install -e ".[dev]"
 ```
 
----
-
-## 3. Quickstart & Usage
-
-### Probe a Single Prompt
-Inspect raw response and canonical normalized token from a mock or CLI adapter:
+Verify installation:
 
 ```bash
-fingerprint probe once --adapter cursor_auto --prompt "Name a random color."
+fingerprint --help
 ```
 
-### Build Reference Fingerprint Library
-Generate golden reference fingerprints for known API models:
+---
+
+## ⚡ 1-Minute Quickstart
+
+### 1. Probe an Adapter Once
+Inspect raw responses and canonical normalized tokens:
+
+```bash
+fingerprint probe once --adapter mock --prompt "Name a random color."
+```
+
+*Example Output:*
+```text
+┌───────────────────┬──────────────┐
+│ Field             │ Value        │
+├───────────────────┼──────────────┤
+│ Raw Text          │ 'blue'       │
+│ Normalized Token  │ 'blue'       │
+│ Answer Class      │ valid        │
+│ Valid             │ True         │
+│ Latency (ms)      │ 5.2          │
+└───────────────────┴──────────────┘
+```
+
+### 2. Build Reference Fingerprint Library
+Generate reference fingerprints for target model APIs:
 
 ```bash
 export OPENAI_API_KEY=sk-...
-fingerprint ref build --adapter openai --base-url https://openrouter.ai/api/v1 \
-  --models-file models.txt --out refs/api-v1
+fingerprint ref build --adapter openai --model gpt-4o --out refs/api-v1
 ```
 
-### Fast Endpoint Quickcheck
-Run a fast 5-session quickcheck against a reference library:
+### 3. Fast Quickcheck
+Run a fast 5-session sanity check against a reference library:
 
 ```bash
 fingerprint quickcheck --adapter cursor_auto --sessions 5 --lib refs/api-v1
 ```
 
-### Audit Router / Auto Mode Mixtures
-Run a full multi-session audit on Cursor Auto or Devin Auto:
+### 4. Full Router Audit & HTML Report
+Audit dynamic router mixture proportions across 10 independent sessions:
 
 ```bash
-# Set up isolated empty workspace
-mkdir -p /tmp/fingerprint-empty && git -C /tmp/fingerprint-empty init -q
-
-# Audit Cursor Auto router mixture across 20 sessions
-fingerprint audit --adapter cursor_auto --sessions 20 --n-per-cell 15 \
-  --battery batteries/v1 --lib refs/api-v1 --report html --out runs/cursor-auto
-
-# Audit claimed model endpoint
-fingerprint audit --adapter openai --model gpt-4o --claim gpt-4o \
-  --lib refs/api-v1 --tau 0.05 --out runs/gpt4o-audit
+fingerprint audit --adapter cursor_auto --sessions 10 --n-per-cell 15 \
+  --battery batteries/v1 --lib refs/api-v1 --report html --out runs/cursor-auto-audit
 ```
 
 ---
 
-## 4. Architecture & Adapter Protocol
+## 🐍 Python SDK API Usage
 
-```text
-CLI / YAML Config
-       │
-       ▼
-Orchestrator Collector (concurrent thread pool, battery, cache)
-       │
-       ▼
-Adapters (OpenAI-compatible HTTP, Generic Subprocess CLI, Mock)
-       │
-       ▼
-Normalizer (NFC, casefold, punctuation strip, lexicons, validity)
-       │
-       ▼
-Empirical Cell Distributions & Jensen-Shannon Divergence (JSD)
-       │
-       ▼
-Verification / Identification / Router Mixture Reports
-```
-
-### Adapter Interface (`src/fingerprint/types.py`)
+You can use `llm-fingerprint` as a standalone Python library in your research or auditing tools:
 
 ```python
-class AdapterResult(BaseModel):
-    raw_text: str
-    extracted_token: str | None = None
-    valid: bool
-    invalid_reason: str | None = None
-    latency_ms: float
-    exit_code: int | None = None
-    stdout: str = ""
-    stderr: str = ""
-    meta: dict[str, Any] = Field(default_factory=dict)
+from pathlib import Path
+from fingerprint.adapters import OpenAICompatAdapter, MockAdapter
+from fingerprint.collect import collect
+from fingerprint.distance import distance
+from fingerprint.verify import verify, identify, mixture_report
 
-class ModelAdapter(Protocol):
-    name: str
-    environment: str
+# 1. Initialize Adapters
+adapter_a = MockAdapter(target_profile="gpt-4o")
+adapter_b = MockAdapter(target_profile="claude-3-5-sonnet")
 
-    def complete(self, prompt: str, *, temperature: float = 1.0) -> AdapterResult:
-        ...
+# 2. Collect Empirical Fingerprints concurrently
+fp_a = collect(adapter_a, battery_path="batteries/v1", n_per_cell=20, max_workers=8)
+fp_b = collect(adapter_b, battery_path="batteries/v1", n_per_cell=20, max_workers=8)
+
+# 3. Compute Jensen-Shannon Divergence
+dist_result = distance(fp_a, fp_b, min_n=10)
+print(f"JSD Distance between GPT-4o and Claude 3.5 Sonnet: {dist_result.distance:.4f}")
+
+# 4. Verify Model Claim
+verify_result = verify(fp_a, fp_b, tau=0.05)
+print(f"Verification Verdict: {'PASSED' if verify_result.verified else 'FAILED'}")
+
+# 5. Router Mixture Audit over sessions
+mix_result = mixture_report(sessions=[fp_a, fp_b], library=[fp_a, fp_b])
+print(f"Estimated Mixture Shares: {mix_result.estimated_mixture}")
 ```
 
 ---
 
-## 5. Threat Model & Ethics
+## 🛠️ CLI Command Reference
 
-- **In Scope**: Detecting silent backend swaps, reseller model degradation, router Auto mode model mixtures, and honest misconfigurations.
-- **Environment Rule**: **API fingerprints $\neq$ Agent CLI fingerprints.** Every run is tagged with its `environment` (`openai-api`, `cursor-cli`, `devin-cli`, etc.). Comparing across environments is flagged unless explicitly forced.
-- **Safety & Isolation**: Run CLI fingerprinting inside an isolated, empty directory (e.g. `/tmp/fingerprint-empty`). Never run unattended agent CLIs in sensitive production codebases.
+| Command | Subcommand | Description |
+| :--- | :--- | :--- |
+| `fingerprint` | `probe once` | Probes an endpoint once with a prompt and prints raw + normalized output. |
+| `fingerprint` | `ref build` | Builds golden reference fingerprints for known model endpoints. |
+| `fingerprint` | `quickcheck` | Fast sanity check of an endpoint/router against a reference library. |
+| `fingerprint` | `audit` | Runs a multi-session audit, generating JSD distance metrics, verification, & mixture reports. |
+| `fingerprint` | `report` | Renders an HTML or Markdown report from a saved `fingerprint.json` file. |
 
 ---
 
-## 6. Citation
+## ⚙️ Configuration File (`fingerprint.example.yaml`)
 
-If you use this toolkit in your research or production auditing, please cite:
+Define reusable recipe configurations for custom CLI agents and OpenAI-compatible API providers:
+
+```yaml
+adapters:
+  cursor_auto:
+    type: cli
+    command: ["agent", "-p", "--output-format", "text", "--mode", "ask"]
+    prompt_mode: argv          # argv | stdin | file
+    prompt_template: |
+      Reply with exactly one word. No punctuation. No markdown. No preamble.
+      Do not use tools, shell, or read files. Do not explain.
+      Question: {prompt}
+    cwd: /tmp/fingerprint-empty
+    timeout_s: 120
+    environment: cursor-cli
+
+  openrouter_gpt4o:
+    type: openai
+    environment: openai-api
+    model: openai/gpt-4o
+    base_url: https://openrouter.ai/api/v1
+    api_key: ${OPENROUTER_API_KEY}
+    timeout_s: 30
+```
+
+---
+
+## 🛡️ Threat Model & Safety Guidelines
+
+- **Environment Rule**: **API fingerprints $\neq$ Agent CLI fingerprints.** Every fingerprint is tagged with an explicit `environment` tag (`openai-api`, `cursor-cli`, `devin-cli`, etc.). Comparing fingerprints across different environments is flagged unless forced.
+- **Agent Isolation**: When fingerprinting headless coding agents (e.g. Cursor, Devin), **always run probes inside an isolated empty directory** (e.g. `/tmp/fingerprint-empty`). Never execute unattended CLI agent probes in sensitive codebase repositories.
+
+---
+
+## 📖 Scientific Citation & References
+
+This implementation is based on the research presented in:
+
+> **Tomáš Bruckner**  
+> *One Token Is Enough: Fingerprinting and Verifying Large Language Models from Single-Token Output Distributions*  
+> arXiv:2607.10252, July 2026.
+
+If you use `llm-fingerprint` in your research or auditing projects, please cite:
 
 ```bibtex
 @article{bruckner2026onetoken,
@@ -149,8 +257,13 @@ If you use this toolkit in your research or production auditing, please cite:
 }
 ```
 
+### Artifacts & Datasets
+- 📜 **arXiv Paper**: [arXiv:2607.10252](https://arxiv.org/abs/2607.10252)
+- 💾 **Software Artifact**: [Zenodo DOI: 10.5281/zenodo.21278793](https://doi.org/10.5281/zenodo.21278793)
+- 📊 **Dataset Artifact**: [Zenodo DOI: 10.5281/zenodo.21278557](https://doi.org/10.5281/zenodo.21278557)
+
 ---
 
-## 7. License
+## 📄 License
 
 Distributed under the [MIT License](LICENSE).
