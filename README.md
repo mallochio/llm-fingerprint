@@ -1,5 +1,6 @@
 # 🔬 LLM Single-Token Fingerprinting Toolkit (`llm-fingerprint`)
 
+[![Unofficial Implementation](https://img.shields.io/badge/Status-Unofficial%20Implementation-orange.svg)](#disclaimer)
 [![Python 3.11 | 3.12 | 3.13 | 3.14](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13%20%7C%203.14-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![arXiv](https://img.shields.io/badge/arXiv-2607.10252-b31b1b.svg)](https://arxiv.org/abs/2607.10252)
@@ -8,6 +9,9 @@
 [![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 > **Detect silent model downgrades, identify opaque API endpoints, and audit agent router mixtures using single-token output distributions.**
+
+> [!NOTE]
+> **Disclaimer & Attribution**: `llm-fingerprint` is an **independent, unofficial open-source toolkit and reproduction** based on the methodology proposed by **Tomáš Bruckner** in *"One Token Is Enough: Fingerprinting and Verifying Large Language Models from Single-Token Output Distributions"* (arXiv:2607.10252). This project is maintained by the open-source community and is not officially affiliated with or endorsed by the original paper authors.
 
 `llm-fingerprint` is a high-performance Python toolkit and CLI designed to fingerprint, verify, and audit Large Language Models (LLMs) across black-box HTTP APIs and headless agent CLIs (such as Cursor, Devin, Aider, and custom subagents).
 

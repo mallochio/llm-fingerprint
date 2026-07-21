@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "llm-fingerprint"
 version = "0.1.0"
-description = "Single-token output distribution toolkit for fingerprinting, verifying, and auditing LLMs & router mixtures."
+description = "Unofficial open-source toolkit for single-token LLM fingerprinting, verification, & router mixture auditing based on Bruckner (2026)."
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.11"
