@@ -1,0 +1,448 @@
+{
+  "schema_version": 1,
+  "battery_id": "1.0.0",
+  "battery_hash": "af264c8cb128",
+  "environment": "openai-api",
+  "adapter": "openai",
+  "claimed_model": "google/gemini-2.5-flash",
+  "temperature": 1.0,
+  "created_at": "2026-07-21T17:09:05.478541+00:00",
+  "cells": {
+    "en/num100-random": {
+      "counts": {
+        "42": 3,
+        "57": 1,
+        "73": 1
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "ru/num100-random": {
+      "counts": {
+        "57": 1,
+        "14": 1,
+        "27": 1,
+        "87": 1,
+        "37": 1
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "zh/num100-random": {
+      "counts": {
+        "37": 1,
+        "42": 3,
+        "87": 1
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "ar/num100-random": {
+      "counts": {
+        "73": 1,
+        "57": 1,
+        "42": 3
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "en/num10-random": {
+      "counts": {
+        "7": 5
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "ru/num10-random": {
+      "counts": {
+        "7": 5
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "zh/num10-random": {
+      "counts": {
+        "7": 5
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "ar/num10-random": {
+      "counts": {
+        "7": 5
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "en/num-favorite": {
+      "counts": {
+        "8": 1,
+        "7": 1,
+        "42": 3
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "ru/num-favorite": {
+      "counts": {
+        "7": 1,
+        "42": 4
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "zh/num-favorite": {
+      "counts": {
+        "7": 5
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "ar/num-favorite": {
+      "counts": {
+        "7": 4,
+        "3": 1
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "en/letter-random": {
+      "counts": {
+        "k": 1,
+        "z": 1,
+        "x": 1,
+        "p": 2
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "ru/letter-random": {
+      "counts": {
+        "ф": 1,
+        "о": 1,
+        "ж": 1,
+        "б": 1,
+        "й": 1
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "zh/letter-random": {
+      "counts": {
+        "笔": 1,
+        "大": 1,
+        "谢": 1,
+        "一": 1,
+        "风": 1
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "ar/letter-random": {
+      "counts": {
+        "ت": 2,
+        "و": 1,
+        "ر": 1,
+        "س": 1
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "en/word-random": {
+      "counts": {
+        "serendipity": 1,
+        "elephant": 1,
+        "computer": 1,
+        "random": 1,
+        "pineapple": 1
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "ru/word-random": {
+      "counts": {
+        "стол": 2,
+        "кот": 1,
+        "цветок": 1,
+        "яблоко": 1
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "zh/word-random": {
+      "counts": {
+        "苹果": 3,
+        "电脑": 1,
+        "世界": 1
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "ar/word-random": {
+      "counts": {
+        "شجرة": 2,
+        "كرسي": 1,
+        "طاولة": 1,
+        "قلم": 1
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "en/color-random": {
+      "counts": {
+        "green": 1,
+        "blue": 2,
+        "red": 1,
+        "cyan": 1
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "ru/color-random": {
+      "counts": {
+        "зеленый": 2,
+        "красный": 1,
+        "зелёный": 1,
+        "синий": 1
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "zh/color-random": {
+      "counts": {
+        "蓝色": 2,
+        "蓝": 2,
+        "红": 1
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "ar/color-random": {
+      "counts": {
+        "أزرق": 5
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "en/color-favorite": {
+      "counts": {
+        "blue": 5
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "ru/color-favorite": {
+      "counts": {
+        "синий": 3,
+        "желтый": 1,
+        "любой": 1
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "zh/color-favorite": {
+      "counts": {
+        "蓝": 4,
+        "蓝色": 1
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "ar/color-favorite": {
+      "counts": {
+        "أزرق": 5
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "en/animal-random": {
+      "counts": {
+        "dog": 3,
+        "cat": 1,
+        "tiger": 1
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "ru/animal-random": {
+      "counts": {
+        "слон": 1,
+        "жираф": 1,
+        "собака": 3
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "zh/animal-random": {
+      "counts": {
+        "猫": 1,
+        "狗": 2,
+        "狮子": 1,
+        "老虎": 1
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "ar/animal-random": {
+      "counts": {
+        "فيل": 4,
+        "زرافة": 1
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "en/city-random": {
+      "counts": {
+        "paris": 1,
+        "london": 4
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "ru/city-random": {
+      "counts": {
+        "париж": 3,
+        "москва": 1,
+        "лондон": 1
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "zh/city-random": {
+      "counts": {
+        "伦敦": 2,
+        "巴黎": 1,
+        "上海": 1,
+        "北京": 1
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "ar/city-random": {
+      "counts": {
+        "دمشق": 1,
+        "القاهرة": 2,
+        "كيركلا": 1,
+        "الإسكندرية": 1
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "en/coin-flip": {
+      "counts": {
+        "t": 3,
+        "h": 2
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "ru/coin-flip": {
+      "counts": {
+        "h": 3,
+        "t": 2
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "zh/coin-flip": {
+      "counts": {
+        "t": 3,
+        "h": 2
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    },
+    "ar/coin-flip": {
+      "counts": {
+        "h": 5
+      },
+      "n_valid": 5,
+      "n_invalid": 0,
+      "n_refusal": 0,
+      "n_empty": 0
+    }
+  },
+  "meta": {
+    "n_per_cell": 5,
+    "total_probes": 200,
+    "completed_probes": 200
+  }
+}

@@ -239,6 +239,43 @@ def report_cmd(
         console.print(md_rep)
 
 
+@app.command("demo")
+def demo_cmd(
+    adapter: str = typer.Option("mock", "--adapter", "-a", help="Adapter ID (mock | openai | cursor_auto)"),
+    out: Path = typer.Option("runs/demo", "--out", "-o", help="Output directory for demo report"),
+):
+    """Zero-config 5-second demonstration using paper prompt batteries and reference libraries."""
+    console.print("[bold green]🚀 Running Instant LLM Fingerprinting Demo...[/bold green]")
+    model_adapter = load_adapter(adapter)
+
+    # Load canonical bundled library
+    library = load_library("api-v1")
+
+    console.print("[bold blue]Probing endpoint with canonical paper prompt battery...[/bold blue]")
+    collected_sessions = [
+        collect(model_adapter, battery_path="v1", n_per_cell=10, claimed_model="gpt-5.6-sol")
+        for _ in range(3)
+    ]
+
+    primary_fp = collected_sessions[0]
+    mix_res = mixture_report(collected_sessions, library)
+    neighbors = identify(primary_fp, library, k=3)
+
+    out.mkdir(parents=True, exist_ok=True)
+    save_fingerprint(primary_fp, out / "fingerprint.json")
+
+    html_report = generate_html_report(primary_fp, None, neighbors, mix_res)
+    with open(out / "report.html", "w", encoding="utf-8") as f:
+        f.write(html_report)
+
+    console.print("\n[bold green]✅ Demo Completed Successfully![/bold green]")
+    console.print(f"- Audited Sessions: [cyan]{mix_res.num_sessions}[/cyan]")
+    top_id = neighbors[0].model_id if neighbors else 'Unknown'
+    top_d = neighbors[0].distance if neighbors else 0.0
+    console.print(f"- Top Matched Neighbor: [cyan]{top_id}[/cyan] (JSD: [magenta]{top_d:.4f}[/magenta])")
+    console.print(f"- Interactive HTML Report: [underline]{out / 'report.html'}[/underline]")
+
+
 def main():
     app()
 

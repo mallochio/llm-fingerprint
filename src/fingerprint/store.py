@@ -23,23 +23,34 @@ def load_fingerprint(file_path: str | Path) -> Fingerprint:
 
 def load_library(lib_path: str | Path) -> list[Fingerprint]:
     """Loads a list of reference Fingerprints from a directory or JSON file."""
-    lib_path = Path(lib_path)
-    if not lib_path.exists():
-        raise FileNotFoundError(f"Reference library path not found: {lib_path}")
+    path_obj = Path(lib_path)
+
+    if not path_obj.exists():
+        # Fallback to bundled package data directory
+        data_dir = Path(__file__).parent / "data" / "refs"
+        candidate = data_dir / str(lib_path)
+        if candidate.exists():
+            path_obj = candidate
+        elif (data_dir / "api-v1").exists():
+            path_obj = data_dir / "api-v1"
+        elif data_dir.exists():
+            path_obj = data_dir
+        else:
+            raise FileNotFoundError(f"Reference library path not found: {lib_path}")
 
     fps: list[Fingerprint] = []
 
-    if lib_path.is_file():
-        if lib_path.suffix.lower() == ".json":
-            with open(lib_path, "r", encoding="utf-8") as f:
+    if path_obj.is_file():
+        if path_obj.suffix.lower() == ".json":
+            with open(path_obj, "r", encoding="utf-8") as f:
                 data = json.load(f)
             if isinstance(data, list):
                 for item in data:
                     fps.append(Fingerprint.model_validate(item))
             elif isinstance(data, dict):
                 fps.append(Fingerprint.model_validate(data))
-    elif lib_path.is_dir():
-        for path in sorted(lib_path.rglob("*.json")):
+    elif path_obj.is_dir():
+        for path in sorted(path_obj.rglob("*.json")):
             try:
                 fps.append(load_fingerprint(path))
             except Exception:

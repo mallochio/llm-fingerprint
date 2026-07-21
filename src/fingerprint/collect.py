@@ -13,13 +13,27 @@ from fingerprint.normalize import normalize_answer
 
 def load_battery(battery_path: str | Path) -> tuple[dict[str, Any], str, str, dict[str, Any]]:
     """Loads prompt battery JSON, returns (battery_data, battery_id, battery_hash, color_lexicon)."""
-    battery_path = Path(battery_path)
-    if battery_path.is_dir():
-        prompt_file = battery_path / "prompts.json"
-        color_file = battery_path / "color-lexicon.json"
+    path_obj = Path(battery_path)
+
+    # Check local filesystem first
+    if path_obj.is_dir():
+        prompt_file = path_obj / "prompts.json"
+        color_file = path_obj / "color-lexicon.json"
+    elif path_obj.is_file():
+        prompt_file = path_obj
+        color_file = path_obj.parent / "color-lexicon.json"
     else:
-        prompt_file = battery_path
-        color_file = battery_path.parent / "color-lexicon.json"
+        # Fallback to bundled package data directory
+        data_dir = Path(__file__).parent / "data" / "batteries"
+        candidate = data_dir / str(battery_path)
+        if candidate.is_dir():
+            prompt_file = candidate / "prompts.json"
+            color_file = candidate / "color-lexicon.json"
+        elif (data_dir / "v1").is_dir():
+            prompt_file = data_dir / "v1" / "prompts.json"
+            color_file = data_dir / "v1" / "color-lexicon.json"
+        else:
+            raise FileNotFoundError(f"Battery prompt file not found at {battery_path}")
 
     if not prompt_file.exists():
         raise FileNotFoundError(f"Battery prompt file not found at {prompt_file}")

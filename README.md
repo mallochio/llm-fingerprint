@@ -114,9 +114,27 @@ fingerprint --help
 
 ---
 
-## ⚡ 1-Minute Quickstart
+## ⚡ Quickstart
 
-### 1. Probe an Adapter Once
+### 1. Instant 5-Second Zero-Config Demo
+Run an immediate end-to-end fingerprinting audit using bundled paper prompt batteries (`v1`) and golden reference profiles—no API keys or prompt writing required:
+
+```bash
+fingerprint demo
+```
+
+*Terminal Output:*
+```text
+🚀 Running Instant LLM Fingerprinting Demo...
+Probing endpoint with canonical paper prompt battery...
+
+✅ Demo Completed Successfully!
+- Audited Sessions: 3
+- Top Matched Neighbor: gpt-5.6-sol (JSD: 0.0000)
+- Interactive HTML Report: runs/demo/report.html
+```
+
+### 2. Probe an Adapter Once
 Inspect raw responses and canonical normalized tokens:
 
 ```bash
@@ -199,6 +217,7 @@ print(f"Estimated Mixture Shares: {mix_result.estimated_mixture}")
 
 | Command | Subcommand | Description |
 | :--- | :--- | :--- |
+| `fingerprint` | `demo` | Instant 5-second zero-config audit using bundled paper prompt batteries and reference libraries. |
 | `fingerprint` | `probe once` | Probes an endpoint once with a prompt and prints raw + normalized output. |
 | `fingerprint` | `ref build` | Builds golden reference fingerprints for known model endpoints. |
 | `fingerprint` | `quickcheck` | Fast sanity check of an endpoint/router against a reference library. |
