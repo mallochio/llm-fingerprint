@@ -27,7 +27,7 @@ def verify(
     dist_res = distance(f_unknown, f_claim, min_n=min_n)
 
     claimed_name = f_claim.claimed_model or f_claim.adapter or "claimed_model"
-    is_verified = dist_res.distance < tau
+    is_verified = dist_res.distance <= tau
 
     return VerifyResult(
         claimed_model=claimed_name,

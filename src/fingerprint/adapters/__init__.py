@@ -109,6 +109,9 @@ def load_adapter(
             base_url=cfg.get("base_url"),
             api_key=cfg.get("api_key"),
             environment=cfg.get("environment", "openai-api"),
+            system_prompt=cfg.get("system_prompt"),
+            max_completion_tokens=cfg.get("max_completion_tokens"),
+            reasoning_effort=cfg.get("reasoning_effort"),
             timeout_s=float(cfg.get("timeout_s", 30.0)),
         )
     elif adapter_type == "mock":
