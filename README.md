@@ -13,7 +13,7 @@
 > [!NOTE]
 > **Disclaimer & Attribution**: `llm-fingerprint` is an **independent, unofficial open-source toolkit and reproduction** based on the methodology proposed by **Tomáš Bruckner** in *"One Token Is Enough: Fingerprinting and Verifying Large Language Models from Single-Token Output Distributions"* (arXiv:2607.10252). This project is maintained by the open-source community and is not officially affiliated with or endorsed by the original paper authors.
 
-`llm-fingerprint` is a high-performance Python toolkit and CLI designed to fingerprint, verify, and audit Large Language Models (LLMs) across black-box HTTP APIs and headless agent CLIs (such as Cursor, Devin, Aider, and custom subagents).
+`llm-fingerprint` is a high-performance Python toolkit and CLI designed to fingerprint, verify, and audit Large Language Models (LLMs) across black-box HTTP APIs and headless agent CLIs (such as Cursor, Devin, and custom subagents).
 
 ---
 
